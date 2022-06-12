@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Account Statement</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+
+    <!--Reference to Style Sheet -->
+    <link type="text/css" rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-dark"
+      style="background-color: #09a7c3"
+    >
+      <div class="container-fluid">
+        <a class="nav-link active" href="#"></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/fin/meta/coa}"
+                >Chart of Accounts</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/fin/txn/list}"
+                >Journal Processing</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                th:href="@{/fin/exp/entry}"
+                >Statement Upload</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/fin/exp/list}"
+                >Expense Analysis</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/fin/txn/ledger}"
+                >Equity Portfolio</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/fin/txn/tbalance}"
+                >NLP Processor</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/fin/rpt/bsheet}">Balance Sheet</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/fin/rpt/istmt}"
+                >Income Statement</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/fin/txn/cflist}"
+                >F.I.R.E Calculations</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/fin/txn/oblist}"
+                >Out of Balance</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div id="wrapper">
+      <div id="header">
+        <h2 align="center">Statement Upload</h2>
+        <h4 align="center"><i>for a period of one year</i></h4>
+      </div>
+      <br />
+    </div>
+    <div id="wrapper">
+      <div id="header">
+        <h4 align="center" th:text="${messagetext}"></h4>
+        <br />
+        <p
+          align="center"
+          th:text="${message}"
+          th:if="${message ne null}"
+          class="alert alert-primary"
+        ></p>
+        <form
+          align="center"
+          method="post"
+          th:object="${UIMetaData}"
+          th:action="@{/fin/exp/upload}"
+          enctype="multipart/form-data"
+        >
+          <input type="file" name="file" class="form-control" />
+          <select th:field="*{typeOfStatement}">
+            <option th:value="'B'" th:text="Bank_Statement       "></option>
+            <option th:value="'C'" th:text="Credit_Card_Statement"></option>
+          </select>
+          <button type="submit" class="btn btn-primary" align="center">
+            Upload File
+          </button>
+        </form>
+      </div>
+    </div>
+    <div id="wrapper">
+      <div th:if="${not #lists.isEmpty(uploadEntries)}">
+        <table border="1;" align="center" class="table table-bordered">
+          <col width="50" />
+          <col width="350" />
+          <col width="150" />
+          <tr>
+            <th>S.No</th>
+            <th>File Name</th>
+            <th>Containing <br />Folder</th>
+            <th>File <br />Size</th>
+            <th>Uploaded <br />Date</th>
+            <th>Uploaded <br />Time</th>
+            <th>
+              Uploaded <br />
+              By
+            </th>
+            <th>
+              Upload <br />
+              status
+            </th>
+            <th>Type</th>
+          </tr>
+          <tr th:each="entry, lstat : ${uploadEntries}">
+            <td align="left" th:text="${entry.fileUploadKey}"></td>
+            <td align="left" th:text="${entry.fileName}"></td>
+            <td align="left" th:text="${entry.containingFolder}"></td>
+            <td align="right" th:text="${entry.fileSizeFmtd}"></td>
+            <td align="right" th:text="${entry.uploadDate}"></td>
+            <td align="right" th:text="${entry.uploadTime}"></td>
+            <td align="left" th:text="${entry.uploadedBy}"></td>
+            <td align="left" th:text="${entry.uploadStatus}"></td>
+            <td align="left" th:text="${entry.fileType}"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

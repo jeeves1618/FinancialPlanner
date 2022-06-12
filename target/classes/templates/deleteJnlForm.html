@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Journals</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <!--Reference to Style Sheet -->
+    <link type="text/css" rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-dark"
+      style="background-color: #09a7c3"
+    >
+      <div class="container-fluid">
+        <a class="nav-link active" href="#"></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    th:href="@{/fin/meta/coa}"
+                    >Chart of Accounts</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/fin/txn/list}">Journal Processing</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active"
+                  aria-current="page" th:href="@{/fin/exp/entry}">Statement Upload</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/fin/exp/list}"
+                    >Expense Analysis</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/fin/txn/ledger}"
+                    >Equity Portfolio</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/fin/txn/tbalance}"
+                    >NLP Processor</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/fin/rpt/bsheet}">Balance Sheet</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/fin/rpt/istmt}"
+                    >Income Statement</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/fin/txn/cflist}">F.I.R.E Calculations</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/fin/txn/oblist}"
+                    >Out of Balance</a
+                  >
+                </li>
+              </ul>
+              
+            </div>
+          </div>
+        </nav>
+        <div id="wrapper">
+          <div id="header">
+            <h2 align="center">Journal Adjustment</h2>
+          </div>
+          <br />
+        </div>
+<div id="container">
+    <h3>Deleting Journals</h3>
+<div id="container">
+    <div class="alert alert-danger" role="alert" align="center">
+        <h3>Are you sure you want to delete this entry?</h3>
+      </div>
+      
+    <!-- The action below will be the path in the @PostMapping Controller method -->
+    <form th:action="@{delete}" th:object="${journal}" method="POST">
+
+        <!-- We need to associate this data with customer ID -->
+        <input type="hidden" th:field="*{journalsKey}" />
+        <table>
+			<col width="800">
+			<col width="500">
+            <tbody>
+              <tr>
+                <td align="left"><label>Account Number : </label></td>
+                <td><input type="text" th:text="${accountNumber}" /></td>
+            </tr>
+
+            <tr>
+                <td align="left"><label>Transaction Objective : </label></td>
+                <td><input type="text" th:text="${increaseOrDecreaseInd}" /></td>
+            </tr>
+            
+            <tr>
+                <td align="left"><label>Journal Amount : </label></td>
+                <td><input type="text" th:text="${journalAmount}" /></td>
+            </tr>
+            
+            <tr>
+              <td align="left"><label>Journal Reason : </label></td>
+              <td><input type="text" th:text="${journalReason}" /></td>
+            </tr>
+
+            <tr>
+              <td align="left"><label>Journal Date : </label></td>
+              <td><input type="date" th:text="${journalDate}" /></td>
+          </tr>
+                 
+                <tr>
+                    <td align="center" colspan=2><a th:href="@{/fin/meta/delete(chartID=${journal.journalsKey})}"
+                        class="btn btn-secondary btn-sm" 
+                        onclick="if (!(Confirm('Are you sure you want to delete this entry?'))) return false"><b>Confirm Delete</b></a></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </form:form>
+    <div>
+        <p>
+            <a th:href="@{/fin/meta/coa}">Back to Chart of Accounts</a>
+        </p>
+    </div>
+    
+</div>
+</div>
+</body>
+
+</html>
