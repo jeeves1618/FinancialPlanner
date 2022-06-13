@@ -2,6 +2,7 @@ package net.myphenotype.financialStatements.processing.service;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import net.myphenotype.financialStatements.processing.domain.UIMetaData;
 import net.myphenotype.financialStatements.processing.entity.AccountStatement;
 import net.myphenotype.financialStatements.processing.repo.AccountStatementRepo;
 import org.apache.poi.ss.usermodel.Cell;
@@ -23,7 +24,7 @@ import java.util.List;
 @Data
 @Slf4j
 public class StatementService {
-    
+
     @Autowired
     AccountStatement accountStatement;
 
@@ -35,10 +36,23 @@ public class StatementService {
     ArrayList<AccountStatement> AccountStatementList = new ArrayList<AccountStatement>();
     String accountNumber = null;
 
+    public List<AccountStatement> getEntries(String fileWithPathname, UIMetaData uiMetaData) {
+        switch (uiMetaData.getTypeOfStatement()) {
+            case "B":
+            case "Bank_Statement":
+                return getAccountEntries(fileWithPathname);
+            case "C":
+            case "Credit_Card_Statement":
+                return getCreditEntries(fileWithPathname, uiMetaData);
+            default:
+                return null;
+        }
+    }
+
     public List<AccountStatement> getAccountEntries(String fileWithPathname) {
         int bsIterator = 0;
         try {
-            FileInputStream file=new FileInputStream(new File(fileWithPathname));
+            FileInputStream file = new FileInputStream(new File(fileWithPathname));
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
 
@@ -51,38 +65,34 @@ public class StatementService {
             //Read through the Header Rows
 
             Row headerRow = rowIterator.next();
-            boolean skipProcessing =  true, moreTransactions = true;
-            while (rowIterator.hasNext() && skipProcessing)
-            {
+            boolean skipProcessing = true, moreTransactions = true;
+            while (rowIterator.hasNext() && skipProcessing) {
                 Row row = rowIterator.next();
                 Iterator<Cell> cellIterator = row.cellIterator();
                 Cell cell = cellIterator.next();
                 cell = cellIterator.next();
-                if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains("Transactions List")){
+                if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains("Transactions List")) {
                     String accountString = cell.getStringCellValue();
-                    accountNumber = accountString.substring(accountString.length()-12);
-                    log.info("accountString : " + accountString.substring(accountString.length()-12));
+                    accountNumber = accountString.substring(accountString.length() - 12);
+                    log.info("accountString : " + accountString.substring(accountString.length() - 12));
                 }
-                if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains("S No.")){
+                if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains("S No.")) {
                     skipProcessing = false;
                 }
             }
 
-            while (rowIterator.hasNext() && moreTransactions)
-            {
+            while (rowIterator.hasNext() && moreTransactions) {
                 Row row = rowIterator.next();
                 //For each row, iterate through all the columns
                 Iterator<Cell> cellIterator = row.cellIterator();
                 //Instantiate an Object for each individual member of Array
                 //accountStatement = new AccountStatement();
 
-                while (cellIterator.hasNext())
-                {
+                while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
 
                     //Check the cell type and format accordingly
-                    switch (cell.getCellType())
-                    {
+                    switch (cell.getCellType()) {
                         case NUMERIC:
                             //System.out.print(cell.getNumericCellValue() + "t");
                             switch (cell.getColumnIndex()) {
@@ -150,21 +160,121 @@ public class StatementService {
                 bsIterator++;
             }
             file.close();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return AccountStatementList;
     }
 
-    public void saveAccountEntries(List<AccountStatement> accountStatements){
+    public void saveAccountEntries(List<AccountStatement> accountStatements) {
         accountStatementRepo.saveAll(accountStatements);
     }
 
-    public List<AccountStatement> findAll(){
+    public List<AccountStatement> findAll() {
         return accountStatementRepo.findAll();
+    }
+
+    public List<AccountStatement> getCreditEntries(String fileWithPathname, UIMetaData uiMetaData) {
+        int bsIterator = 0;
+        double balanceAmount = 0.00;
+        try {
+            FileInputStream file = new FileInputStream(new File(fileWithPathname));
+            //Create Workbook instance holding reference to .xlsx file
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+
+            //Get first/desired sheet from the workbook
+            XSSFSheet sheet = workbook.getSheetAt(0);
+
+            //Iterate through each rows one by one
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            //Read through the Header Rows
+
+            Row headerRow = rowIterator.next();
+            boolean skipProcessing = true, moreTransactions = true;
+            while (rowIterator.hasNext() && skipProcessing) {
+                Row row = rowIterator.next();
+                Iterator<Cell> cellIterator = row.cellIterator();
+                Cell cell = cellIterator.next();
+                cell = cellIterator.next();
+                cell = cellIterator.next();
+                cell = cellIterator.next();
+                if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains("Transaction Date")) {
+                    skipProcessing = false;
+                }
+            }
+
+            while (rowIterator.hasNext() && moreTransactions) {
+                Row row = rowIterator.next();
+                //For each row, iterate through all the columns
+                Iterator<Cell> cellIterator = row.cellIterator();
+                //Instantiate an Object for each individual member of Array
+                //accountStatement = new AccountStatement();
+
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next();
+
+                    //Check the cell type and format accordingly
+                    switch (cell.getCellType()) {
+                        case STRING:
+                            //System.out.print(cell.getStringCellValue() + "t");
+                            switch (cell.getColumnIndex()) {
+                                case 3:
+                                    accountStatement.setValueDate(cell.getStringCellValue());
+                                    accountStatement.setTransactionDate(cell.getStringCellValue());
+                                    //System.out.print(accountStatement.typeAssetOrLiability + "t");
+                                    break;
+                                case 4:
+                                    accountStatement.setTransactionRemarks(cell.getStringCellValue());
+                                    //System.out.print(accountStatement.subType + "t");
+                                    break;
+                                case 8:
+                                    String numberStringWithCommas = cell.getStringCellValue().substring(0,cell.getStringCellValue().length()-4);
+                                    String numberString = numberStringWithCommas.replaceAll("[^a-zA-Z0-9.]", "");
+                                    if (cell.getStringCellValue().substring(cell.getStringCellValue().length()-3).equals("Dr.")){
+                                        accountStatement.setWithdrawalAmount(Double.parseDouble(numberString));
+                                        accountStatement.setDepositAmount(0.00);
+                                        balanceAmount = balanceAmount + accountStatement.getWithdrawalAmount();
+                                        accountStatement.setWithdrawalAmountFmtd(rf.formattedRupee(ft.format(accountStatement.getWithdrawalAmount())));
+                                    } else {
+                                        accountStatement.setDepositAmount(Double.parseDouble(numberString));
+                                        accountStatement.setWithdrawalAmount(0.00);
+                                        accountStatement.setDepositAmountFmtd(rf.formattedRupee(ft.format(accountStatement.getDepositAmount())));
+                                    }
+                                    accountStatement.setBalanceAmount(balanceAmount);
+                                    accountStatement.setBalanceAmountFmtd(rf.formattedRupee(ft.format(accountStatement.getBalanceAmount())));
+                                    //System.out.print(accountStatement.itemDescription + "t");
+                                    break;
+                                case 11:
+                                    accountStatement.setCheckNumber(cell.getStringCellValue());
+                                    //System.out.print(accountStatement.itemDescription + "t");
+                                    break;
+                                default:
+                                    throw new IllegalStateException("Unexpected STRING Cell Value in the Spreadsheet :" + bsIterator + " and " + cell.getColumnIndex());
+                            }
+                            break;
+                        case BLANK:
+                            //System.out.print(cell.getStringCellValue() + "t");
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected Cell Value in the Spreadsheet :" + bsIterator + " and " + cell.getColumnIndex());
+                    }
+                }
+                accountStatement.setAccountNumber("Credit Card");
+                AccountStatementList.add(accountStatement);
+                accountStatement = new AccountStatement();
+                bsIterator++;
+            }
+            file.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        accountStatementRepo.deleteById(uiMetaData.getJournalsKey());
+
+        return AccountStatementList;
+
     }
 }
 

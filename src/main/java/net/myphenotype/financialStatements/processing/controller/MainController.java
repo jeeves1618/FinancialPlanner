@@ -331,7 +331,8 @@ public class MainController {
     public String getStatementList(Model model){
         List<AccountStatement> accountEntries = statementService.findAll();
         model.addAttribute("accountEntries", accountEntries);
-        model.addAttribute("messagetext", "Please upload your bank statement here");
+        model.addAttribute("messagetext", "Please select the type of statement and upload it hereNlp");
+        model.addAttribute("UIMetaData",uiMetaData);
         return "accountStatement";
     }
 
@@ -370,7 +371,7 @@ public class MainController {
         */
         // return success response
         //attributes.addFlashAttribute("message", "You successfully uploaded " + fileName + '!');
-        List<AccountStatement> draftAccountEntries = statementService.getAccountEntries(UPLOAD_FILE_PATH + fileName);
+        List<AccountStatement> draftAccountEntries = statementService.getEntries(UPLOAD_FILE_PATH + fileName, uiMetaData);
         statementService.saveAccountEntries(draftAccountEntries);
 
         List<UploadInfo> uploadInfoList = uploadService.findall();

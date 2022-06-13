@@ -86,7 +86,7 @@ tr:nth-child(odd) {
   padding: 4px;
   font-size: 12px;
   font-weight: bold;
-  width: 120px;
+  width: 200px;
   padding: 5px 10px;
 
   margin-bottom: 15px;
@@ -111,7 +111,72 @@ a:hover {
 }
 
 .form-control {
-   margin: auto;
-   display: block;
-   width: 25%;
+  border: 1px solid #666;
+  border-radius: 5px;
+  padding: 4px;
+  margin: auto;
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  width: 480px;
+  padding: 5px 10px;
+}
+.drop-down {
+  border: 1px solid #666;
+  border-radius: 5px;
+  padding: 4px;
+  margin: auto;
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  width: 200px;
+  padding: 5px 10px;
+}
+
+.drop-down-num {
+  border: 1px solid #666;
+  border-radius: 5px;
+  padding: 4px;
+  margin: auto;
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  width: 75px;
+  padding: 5px 10px;
+}
+
+.form-table {
+  border: 0px solid #666;
+  border-radius: 5px;
+  padding: 0px;
+  margin: auto;
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  width: 485px;
+  padding: 0px 0px;
+  background: #09a7c3;
+}
+.form-row {
+  border: 0px solid #666;
+  border-radius: 5px;
+  padding: 0px;
+  margin: auto;
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  width: 400px;
+  padding: 0px 0px;
+  background: #09a7c3;
+  text-align: center;
+}
+
+table tr td.painted {
+  background: #09a7c3;
+  color: white;
+}
+
+table tr.painted {
+  background: #09a7c3;
+  color: white;
 }

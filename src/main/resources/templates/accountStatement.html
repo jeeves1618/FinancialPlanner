@@ -52,15 +52,15 @@
               >
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                th:href="@{/fin/exp/entry}"
+              <a class="nav-link" th:href="@{/fin/exp/entry}"
                 >Statement Upload</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" th:href="@{/fin/exp/list}"
+              <a
+                class="nav-link active"
+                aria-current="page"
+                th:href="@{/fin/exp/list}"
                 >Expense Analysis</a
               >
             </li>
@@ -117,12 +117,16 @@
         <form
           align="center"
           method="post"
+          th:object="${UIMetaData}"
           th:action="@{/fin/exp/upload}"
           enctype="multipart/form-data"
         >
           <input type="file" name="file" class="form-control" />
-
-          <button type="submit" class="btn btn-primary" align="center">
+          <select th:field="*{typeOfStatement}">
+            <option th:value="'B'" th:text="Bank_Statement       "></option>
+            <option th:value="'C'" th:text="Credit_Card_Statement"></option>
+          </select>
+          <button type="submit" class="add-button" align="center">
             Upload File
           </button>
         </form>
