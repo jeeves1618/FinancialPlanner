@@ -1,0 +1,175 @@
+package net.myphenotype.financialStatements.processing.config;
+
+import net.myphenotype.financialStatements.processing.entity.NlpEntry;
+import net.myphenotype.financialStatements.processing.repo.NlpEntriesRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Configuration
+@Profile("h2")
+public class NlpEntriesLoader implements ApplicationListener<ApplicationReadyEvent> {
+
+    @Autowired
+    NlpEntriesRepo nlpEntriesRepo;
+
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        List<NlpEntry> nlpEntryList = new ArrayList<>();
+
+        nlpEntryList.add(new NlpEntry("DTAX","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("AMALFI","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("NITHYAFORBOSCH","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("NITHYAMPURE","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("NITHYAFRIDGE","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("VIJAYHIRANANDAN/ATLANTURE","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("VIJAYHIRANANDAI/ATLANTURE","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("VIJAYAMAFIGRILL/PRASANNA","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("NITHYADISHWASHE","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("WOODWORK","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("AMAFI2705","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("AMALF2705","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("WOODENSTREET","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("MAHATTA","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("SAMSUNG","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("BAWAS FURN PARK","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("LIFE STYLE","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("GANESH ELECTRICALS","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("VIBRANT CONCEPTS CHENNAI","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("HOME IMPROVEMENT","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("KANNAN","Family","N",null));
+        nlpEntryList.add(new NlpEntry("CHANDRA","Family","N",null));
+        nlpEntryList.add(new NlpEntry("DHEEPIKA","Family","N",null));
+        nlpEntryList.add(new NlpEntry("DHEEP","Family","N",null));
+        nlpEntryList.add(new NlpEntry("AMMA","Family","N",null));
+        nlpEntryList.add(new NlpEntry("NANA","Family","N",null));
+        nlpEntryList.add(new NlpEntry("ONKAR","Family","N",null));
+        nlpEntryList.add(new NlpEntry("ACH/HDFCLTD","Monthly EMI","N",null));
+        nlpEntryList.add(new NlpEntry("ACH/LIC HOUSING FINANCE","Monthly EMI","N",null));
+        nlpEntryList.add(new NlpEntry("EMI","Monthly EMI","N",null));
+        nlpEntryList.add(new NlpEntry("ATM","Cash Withdrawals","N",null));
+        nlpEntryList.add(new NlpEntry("CASH WDL","Cash Withdrawals","N",null));
+        nlpEntryList.add(new NlpEntry("3FIVE8 TEC","Apartment Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("MAINTENANCE","Apartment Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("/EB","Electricity Expenses","N",null));
+        nlpEntryList.add(new NlpEntry("ELECTRICITY","Electricity Expenses","N",null));
+        nlpEntryList.add(new NlpEntry("BB DAILY","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("RADHA BUT","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("HILSON HEA","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("BIGBASKET","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("GROCERY","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("MS HEALTH","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("CLOSURE PROCEEDS","Interest Income","N",null));
+        nlpEntryList.add(new NlpEntry("INT.COLL","Interest Income","N",null));
+        nlpEntryList.add(new NlpEntry("INT.PD:","Interest Income","N",null));
+        nlpEntryList.add(new NlpEntry("SBI LIFE INSURANCE COMPANY LTD","Sale Proceeds","N",null));
+        nlpEntryList.add(new NlpEntry("UNNAMALAI","House Keeping","N",null));
+        nlpEntryList.add(new NlpEntry("NETFLIX","Entertainment","Y",null));
+        nlpEntryList.add(new NlpEntry("APPLE","Entertainment","N",null));
+        nlpEntryList.add(new NlpEntry("CAKE","Entertainment","N",null));
+        nlpEntryList.add(new NlpEntry("SWEET","Entertainment","Y",null));
+        nlpEntryList.add(new NlpEntry("NITHYA2705","Entertainment","N",null));
+        nlpEntryList.add(new NlpEntry("JIO","Entertainment","N",null));
+        nlpEntryList.add(new NlpEntry("RELIANCE","Entertainment","N",null));
+        nlpEntryList.add(new NlpEntry("BHARAT SANCHAR NIGAM","Entertainment","Y",null));
+        nlpEntryList.add(new NlpEntry("VODAFONE","Entertainment","N",null));
+        nlpEntryList.add(new NlpEntry("BSNL","Entertainment","N",null));
+        nlpEntryList.add(new NlpEntry("BHARTI AIR","Entertainment","N",null));
+        nlpEntryList.add(new NlpEntry("AIRTEL","Entertainment","N",null));
+        nlpEntryList.add(new NlpEntry("BNY MELLON","Salary","N",null));
+        nlpEntryList.add(new NlpEntry("SALARY","Salary","N",null));
+        nlpEntryList.add(new NlpEntry("WM GLOBAL","Salary","N",null));
+        nlpEntryList.add(new NlpEntry("CMS/ SBIDIV","Dividend Income","N",null));
+        nlpEntryList.add(new NlpEntry("DIVIDEND","Dividend Income","N",null));
+        nlpEntryList.add(new NlpEntry("ACH/","Dividend Income","N",null));
+        nlpEntryList.add(new NlpEntry("SHOPPING","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("SWIGGY","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("BUNDL TECH","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("NICKYS CAF","Shopping and Eatout","Y",null));
+        nlpEntryList.add(new NlpEntry("LANDMARK","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("FASHIONS","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("HARMONY","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("PAYU PAYMENTS PVT LTD 10 GURGAON IN8","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("/SELF","Savings","N",null));
+        nlpEntryList.add(new NlpEntry("RENT","Rental Income","N",null));
+        nlpEntryList.add(new NlpEntry("EBA/NSDL CDSL CHG","Brokerage Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("DP CHGS TILL","Brokerage Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("HANDLING FEE","Brokerage Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("IGST","Brokerage Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("JOINING FEE","Brokerage Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("ANNUAL FEE","Brokerage Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("EX-GRATIA PAYMENT","Brokerage Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("REWARD REDEMPTION","Brokerage Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("EBA/NSE","Capital Market Transactions","N",null));
+        nlpEntryList.add(new NlpEntry("/ZERODHA","Capital Market Transactions","N",null));
+        nlpEntryList.add(new NlpEntry("ZERODHA BROKING","Capital Market Transactions","N",null));
+        nlpEntryList.add(new NlpEntry("INSURANCE","Insurance","N",null));
+        nlpEntryList.add(new NlpEntry("HDFC STANDARD LIFE","Insurance","N",null));
+        nlpEntryList.add(new NlpEntry("BAJAJ ALLIANZ GIC HYUN","Insurance","N",null));
+        nlpEntryList.add(new NlpEntry("LIC","Insurance","N",null));
+        nlpEntryList.add(new NlpEntry("CARS INDIA CHENNAI IN","Travel Expenses","N",null));
+        nlpEntryList.add(new NlpEntry("MUTHUMARI ENTERPRISES","Travel Expenses","N",null));
+        nlpEntryList.add(new NlpEntry("SRI ARAVINDAR AND CO","Travel Expenses","N",null));
+        nlpEntryList.add(new NlpEntry("FITNESS","Healthcare and Fitness","N",null));
+        nlpEntryList.add(new NlpEntry("DOCTOR","Healthcare and Fitness","N",null));
+        nlpEntryList.add(new NlpEntry("MEDICINE","Healthcare and Fitness","N",null));
+        nlpEntryList.add(new NlpEntry("DECATHLON","Healthcare and Fitness","N",null));
+        nlpEntryList.add(new NlpEntry("APOLLO HOSP","Healthcare and Fitness","N",null));
+        nlpEntryList.add(new NlpEntry("HAAPPY HER","Healthcare and Fitness","N",null));
+        nlpEntryList.add(new NlpEntry("BHRTOA BOLLINENI HILLS KANCHIPURAM","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("SUPREME SEAFOOD","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("INNOVATIVE RETAIL","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("INNOVATIVE","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("BIG BASKET","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("SRI POOJA","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("FFSPL MUMBAI IN","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("DBOOKS","Discretionary Learning","Y",null));
+        nlpEntryList.add(new NlpEntry("BVM KIDS","Education","N",null));
+        nlpEntryList.add(new NlpEntry("LAPTOP","Education","N",null));
+        nlpEntryList.add(new NlpEntry("BOOKS","Education","N",null));
+        nlpEntryList.add(new NlpEntry("KSG TECHNOLOGIES","Education","N",null));
+        nlpEntryList.add(new NlpEntry("GFM RETAIL","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("FIRST CRY","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("KIDZON","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("SRI VENKATESWARA","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("JOTHI STORES","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("VENTOTA RETAIL MINISO","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("PAYU MONEY","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("PAYU PAYMENTS PVT","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("REV SWEEP FROM","Bookentries","N",null));
+        nlpEntryList.add(new NlpEntry("BUN2BEN","Bookentries","N",null));
+        nlpEntryList.add(new NlpEntry("BEN2BUN","Bookentries","N",null));
+        nlpEntryList.add(new NlpEntry("AUTOSWEEP","Bookentries","N",null));
+        nlpEntryList.add(new NlpEntry("INFINITY PAYMENT RECEIVED","Bookentries","N",null));
+        nlpEntryList.add(new NlpEntry("ICICI BANK CREDIT CA","Bookentries","Y",null));
+        nlpEntryList.add(new NlpEntry("MMT/IMPS/128014528190/VIJAYAMAFIAC/OMR AIRCON/SBIN","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("AMZN","Miscellaneous","N",null));
+        nlpEntryList.add(new NlpEntry("VIJAYINDUS1222","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("1222ADVANCERETU","Bookentries","Y",null));
+        nlpEntryList.add(new NlpEntry("HEALTH AT HOME","Shopping and Eatout","Y",null));
+        nlpEntryList.add(new NlpEntry("UNIQUE IDENTIFICATION","Brokerage Maintenance","Y",null));
+        nlpEntryList.add(new NlpEntry("HT DIGITAL STREAMS LTD, PATNA, IN","Discretionary Learning","Y",null));
+        nlpEntryList.add(new NlpEntry("FRUITS","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("N. SETHU","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("RO GPURE","Groceries","N",null));
+        nlpEntryList.add(new NlpEntry("MUTHUKUMAR","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("BVM GLOBAL","Education","N",null));
+        nlpEntryList.add(new NlpEntry("VPS/","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("BIL/ONL/","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("IPS/","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("BIL/REV PMT ID","Shopping and Eatout","N",null));
+        nlpEntryList.add(new NlpEntry("MistyIndus","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("Nithya13F","Investments","Y",null));
+        nlpEntryList.add(new NlpEntry("MyFirst/Nithya K","Family","N",null));
+        nlpEntryList.add(new NlpEntry("AMAZON","Miscellaneous","N",null));
+        nlpEntryList.add(new NlpEntry("MYGATE","Apartment Maintenance","N",null));
+
+        nlpEntriesRepo.saveAll(nlpEntryList);
+
+    }
+}
