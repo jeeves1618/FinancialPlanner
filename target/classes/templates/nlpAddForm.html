@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Chart of Accounts</title>
+        <title>Natural Language Processor</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -41,8 +41,7 @@
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                   <a
-                    class="nav-link active"
-                    aria-current="page"
+                    class="nav-link"
                     th:href="@{/fin/meta/coa}"
                     >Chart of Accounts</a
                   >
@@ -64,8 +63,9 @@
                   >
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" th:href="@{/nlp/data/list}"
-                    >NLP Processor</a
+                  <a class="nav-link active"
+                  aria-current="page" th:href="@{/nlp/data/list}"
+                    >NLP Inputs</a
                   >
                 </li>
                 <li class="nav-item">
@@ -93,7 +93,7 @@
         </nav>
         <div id="wrapper">
           <div id="header">
-            <h2 align="center">Chart of Accounts</h2>
+            <h2 align="center">Natutal Language Processing</h2>
           </div>
           <br />
         </div>
@@ -101,32 +101,32 @@
     <h3>Add or Update Chart</h3>
 
     <!-- The action below will be the path in the @PostMapping Controller method -->
-    <form th:action="@{addUpdateChart}" th:object="${chartOfAccount}" method="POST">
+    <form th:action="@{addUpdateEntry}" th:object="${nlpEntry}" method="POST">
 
         <!-- We need to associate this data with customer ID -->
-        <input type="hidden" th:field="*{chartOfAccountsKey}" />
+        <input type="hidden" th:field="*{nlpEntryKey}" />
         <table>
 			<col width="800">
 			<col width="500">
             <tbody>
                 <tr>
-                    <td align="left"><label>Account Number : </label></td>
-                    <td><input type="text" th:field="*{accountNumber}" /></td>
+                    <td align="left"><label>Token : </label></td>
+                    <td><input type="text" th:field="*{tokenizedWord}" /></td>
                 </tr>
 
                 <tr>
-                    <td align="left"><label>Account Description : </label></td>
-                    <td><input type="text" th:field="*{accountDescription}" /></td>
+                    <td align="left"><label>Category : </label></td>
+                    <td><input type="text" th:field="*{entryCategory}" /></td>
                 </tr>
                 
                 <tr>
-                    <td align="left"><label>Account Type : </label></td>
-                    <td><input type="text" th:field="*{accountType}" /></td>
+                    <td align="left"><label>Discretionary Indicator : </label></td>
+                    <td><input type="text" th:field="*{discretionaryInd}" /></td>
                 </tr>
                 
                 <tr>
-                    <td align="left"><label>Financial Statement : </label></td>
-                    <td><input type="text" th:field="*{financialStatement}" /></td>
+                    <td align="left"><label>Last Used : </label></td>
+                    <td><input type="text" th:field="*{lastUsedDate}" /></td>
                 </tr>
                  
                 <tr>
@@ -138,7 +138,7 @@
     </form:form>
     <div>
         <p>
-            <a th:href="@{/fin/meta/coa}">Back to Chart of Accounts</a>
+            <a th:href="@{/fin/data/list}">Back to NLP Inputs</a>
         </p>
     </div>
     
