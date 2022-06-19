@@ -75,6 +75,9 @@ public class MainController {
     @Autowired
     UploadService uploadService;
 
+    @Autowired
+    ExpAnalysisService expAnalysisService;
+
     private final String UPLOAD_FILE_PATH = "C:\\Dev\\Data\\";
     private final String USER_NAME = System.getProperty("user.name").substring(0,1).toUpperCase()+ System.getProperty("user.name").substring(1);
 
@@ -329,6 +332,15 @@ public class MainController {
 
     @GetMapping(path = "/exp/list")
     public String getStatementList(Model model){
+        List<NlpCategory> accountEntries = expAnalysisService.getUniqueEntries();
+        model.addAttribute("accountEntries", accountEntries);
+        model.addAttribute("messagetext", "Please select the type of statement and upload it hereNlp");
+        model.addAttribute("UIMetaData",uiMetaData);
+        return "expenseAnalysis";
+    }
+
+    @GetMapping(path = "/exp/entries")
+    public String getEntriesList(Model model){
         List<AccountStatement> accountEntries = statementService.findAll();
         model.addAttribute("accountEntries", accountEntries);
         model.addAttribute("messagetext", "Please select the type of statement and upload it hereNlp");

@@ -2,6 +2,7 @@ package net.myphenotype.financialStatements.processing.service;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import net.myphenotype.financialStatements.processing.domain.NlpCategory;
 import net.myphenotype.financialStatements.processing.domain.UIMetaData;
 import net.myphenotype.financialStatements.processing.entity.AccountStatement;
 import net.myphenotype.financialStatements.processing.entity.NlpEntry;
@@ -27,7 +28,7 @@ import java.util.List;
 @Service
 @Data
 @Slf4j
-public class StatementService {
+public class ExpAnalysisService {
 
     @Autowired
     AccountStatement accountStatement;
@@ -38,22 +39,37 @@ public class StatementService {
     @Autowired
     NlpEntriesRepo nlpEntriesRepo;
 
+    @Autowired
+    NlpCategory nlpCategory;
+
+    @Autowired
+    private RupeeFormatter rf;
+
     DecimalFormat ft = new DecimalFormat("Rs ##,##,##0.00");
-    RupeeFormatter rf = new RupeeFormatter();
+    DecimalFormat df = new DecimalFormat("##.##%");
     ArrayList<AccountStatement> AccountStatementList = new ArrayList<AccountStatement>();
+    List<NlpCategory> NlpCategorizedList = new ArrayList<>();
     String accountNumber = null;
 
-    public List<AccountStatement> getEntries(String fileWithPathname, UIMetaData uiMetaData) {
-        switch (uiMetaData.getTypeOfStatement()) {
-            case "B":
-            case "Bank_Statement":
-                return getAccountEntries(fileWithPathname);
-            case "C":
-            case "Credit_Card_Statement":
-                return getCreditEntries(fileWithPathname, uiMetaData);
-            default:
-                return null;
+    public List<NlpCategory> getUniqueEntries() {
+        int sNo = 1;
+        List<String> nlpCategories = nlpEntriesRepo.findUniqueEntries();
+        for (String category: nlpCategories)
+        {
+            nlpCategory.setSerialNumber(sNo);
+            nlpCategory.setEntryCategory(category);
+            nlpCategory.setAnnualAmount(accountStatementRepo.findWithdrawalSumByCategory(category));
+            nlpCategory.setMonthlyAmount(nlpCategory.getAnnualAmount()/12);
+            nlpCategory.setMonthlyAmountFmtd(rf.formattedRupee(ft.format(nlpCategory.getMonthlyAmount())));
+            nlpCategory.setAnnualAmountFmtd(rf.formattedRupee(ft.format(nlpCategory.getAnnualAmount())));
+            nlpCategory.setPercentOfTotal(0.00);
+            nlpCategory.setPercentOfTotalFmtd(df.format(nlpCategory.getPercentOfTotal()));
+            NlpCategorizedList.add(nlpCategory);
+            nlpCategory = new NlpCategory();
+            sNo = sNo + 1;
+
         }
+        return NlpCategorizedList;
     }
 
     public List<AccountStatement> getAccountEntries(String fileWithPathname) {

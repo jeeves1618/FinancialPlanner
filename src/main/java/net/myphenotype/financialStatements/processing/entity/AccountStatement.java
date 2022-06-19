@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Component
 @Table(name = "account_statement")
-public class AccountStatement{
+public class AccountStatement {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "acct_statement_key")

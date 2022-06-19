@@ -97,8 +97,10 @@
     </nav>
     <div id="wrapper">
       <div id="header">
-        <h2 align="center">All Account Entries</h2>
-        <h4 align="center"><i>for a period of one year</i></h4>
+        <h2 align="center">Expense Analysis</h2>
+        <h4 align="center">
+          <i>Entries considered for a period of one year</i>
+        </h4>
       </div>
       <br />
     </div>
@@ -108,11 +110,11 @@
           align="center"
           method="get"
           th:object="${UIMetaData}"
-          th:action="@{/fin/exp/list}"
+          th:action="@{/fin/exp/entries}"
           enctype="multipart/form-data"
         >
           <button type="submit" class="add-button" align="center">
-            Back to Expense Analysis
+            All Transactions
           </button>
         </form>
       </div>
@@ -120,41 +122,23 @@
     <div id="wrapper">
       <div th:if="${not #lists.isEmpty(accountEntries)}">
         <table border="1;" align="center" class="table table-bordered">
-          <col width="50" />
-          <col width="350" />
-          <col width="350" />
           <tr>
             <th>S.No</th>
-            <th>Value Date</th>
-            <th>Transaction <br />Date</th>
-            <th>Transaction <br />Remarks</th>
-            <th>Withdrawal <br />Amount</th>
-            <th>Deposit <br />Amount</th>
-            <th>Balance</th>
             <th>Category</th>
-            <th>Discretionary?</th>
-            <th>Account</th>
+            <th>Annual Amount</th>
+            <th>Monthly Amount</th>
+            <th>Percentage</th>
           </tr>
           <tr
             th:each="entry, lstat : ${accountEntries}"
-            th:style="${entry.transactionRemarks == '  Totals'}? 'font-weight: bold;'"
+            th:style="${entry.entryCategory == '  Totals'}? 'font-weight: bold;'"
           >
-            <td align="left" th:text="${entry.acctStaementKey}"></td>
-            <td align="right" th:text="${entry.valueDate}"></td>
-            <td align="right" th:text="${entry.transactionDate}"></td>
-            <td
-              align="left"
-              th:text="${entry.transactionRemarks} + ${entry.checkNumber}"
-            ></td>
-            <td align="right" th:text="${entry.withdrawalAmountFmtd}"></td>
-            <td align="right" th:text="${entry.depositAmountFmtd}"></td>
-            <td align="right" th:text="${entry.balanceAmountFmtd}"></td>
-            <td align="left" th:text="${entry.entryCategory}"></td>
-            <td
-              align="left"
-              th:text="${entry.discretionarySpendingIndicator}"
-            ></td>
-            <td align="left" th:text="${entry.accountNumber}"></td>
+            <td align="left" th:text="${entry.serialNumber}"></td>
+            <td align="right" th:text="${entry.entryCategory}"></td>
+            <td align="right" th:text="${entry.annualAmountFmtd}"></td>
+
+            <td align="right" th:text="${entry.monthlyAmountFmtd}"></td>
+            <td align="right" th:text="${entry.percentOfTotalFmtd}"></td>
           </tr>
         </table>
       </div>

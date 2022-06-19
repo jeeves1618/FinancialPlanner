@@ -97,35 +97,22 @@
     </nav>
     <div id="wrapper">
       <div id="header">
-        <h2 align="center">Statement Upload</h2>
+        <h2 align="center">All Account Entries</h2>
         <h4 align="center"><i>for a period of one year</i></h4>
       </div>
       <br />
     </div>
     <div id="wrapper">
       <div id="header">
-        <h4 align="center" th:text="${messagetext}"></h4>
-        <br />
-        <p
-          align="center"
-          th:text="${message}"
-          th:if="${message ne null}"
-          class="alert alert-primary"
-        ></p>
         <form
           align="center"
-          method="post"
+          method="get"
           th:object="${UIMetaData}"
-          th:action="@{/fin/exp/upload}"
+          th:action="@{/fin/exp/list}"
           enctype="multipart/form-data"
         >
-          <input type="file" name="file" class="form-control" />
-          <select th:field="*{typeOfStatement}">
-            <option th:value="'B'" th:text="Bank_Statement       "></option>
-            <option th:value="'C'" th:text="Credit_Card_Statement"></option>
-          </select>
           <button type="submit" class="add-button" align="center">
-            Upload File
+            Back to Expense Analysis
           </button>
         </form>
       </div>
@@ -144,6 +131,8 @@
             <th>Withdrawal <br />Amount</th>
             <th>Deposit <br />Amount</th>
             <th>Balance</th>
+            <th>Category</th>
+            <th>Discretionary?</th>
             <th>Account</th>
           </tr>
           <tr
@@ -160,6 +149,11 @@
             <td align="right" th:text="${entry.withdrawalAmountFmtd}"></td>
             <td align="right" th:text="${entry.depositAmountFmtd}"></td>
             <td align="right" th:text="${entry.balanceAmountFmtd}"></td>
+            <td align="left" th:text="${entry.entryCategory}"></td>
+            <td
+              align="left"
+              th:text="${entry.discretionarySpendingIndicator}"
+            ></td>
             <td align="left" th:text="${entry.accountNumber}"></td>
           </tr>
         </table>
