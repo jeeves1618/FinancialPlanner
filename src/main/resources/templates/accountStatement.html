@@ -134,6 +134,7 @@
             <th>Category</th>
             <th>Discretionary?</th>
             <th>Account</th>
+            <th>Actions</th>
           </tr>
           <tr
             th:each="entry, lstat : ${accountEntries}"
@@ -155,6 +156,13 @@
               th:text="${entry.discretionarySpendingIndicator}"
             ></td>
             <td align="left" th:text="${entry.accountNumber}"></td>
+            <td>
+              <a
+                th:href="@{/fin/exp/showFormForUpdating(entryID=${entry.acctStaementKey})}"
+                class="btn btn-secondary btn-sm"
+                ><b>Update</b></a
+              >
+            </td>
           </tr>
         </table>
       </div>

@@ -334,7 +334,7 @@ public class MainController {
     public String getStatementList(Model model){
         List<NlpCategory> accountEntries = expAnalysisService.getUniqueEntries();
         model.addAttribute("accountEntries", accountEntries);
-        model.addAttribute("messagetext", "Please select the type of statement and upload it hereNlp");
+        model.addAttribute("messagetext", "Please select the type of statement and upload it here");
         model.addAttribute("UIMetaData",uiMetaData);
         return "expenseAnalysis";
     }
@@ -343,9 +343,36 @@ public class MainController {
     public String getEntriesList(Model model){
         List<AccountStatement> accountEntries = statementService.findAll();
         model.addAttribute("accountEntries", accountEntries);
-        model.addAttribute("messagetext", "Please select the type of statement and upload it hereNlp");
+        model.addAttribute("messagetext", "Please select the type of statement and upload it here");
         model.addAttribute("UIMetaData",uiMetaData);
         return "accountStatement";
+    }
+
+    @GetMapping(path = "/exp/catentries")
+    public String getCatEntriesList(@RequestParam("catID") String catID, Model model){
+        List<AccountStatement> accountEntries = statementService.findEntriesByCategory(catID);
+        model.addAttribute("accountEntries", accountEntries);
+        model.addAttribute("messagetext", "Please select the type of statement and upload it here");
+        model.addAttribute("UIMetaData",uiMetaData);
+        return "accountStatement";
+    }
+
+    @GetMapping(path = "/exp/showFormForUpdating")
+    public String ShowFormForEdit(@RequestParam("entryID") int theID, Model model){
+        //Get the book using the ID from the Service (in turn from DAO and in turn from Table)
+        AccountStatement accountStatement = statementService.getById(theID);
+
+        //Set the Customer as the Model Attribute to Prepopulate the Form
+        model.addAttribute("accountStatement",accountStatement);
+
+        //Send the data to the right form
+        return "accountStatementEdit";
+    }
+
+    @PostMapping(path = "/exp/updateEntry")
+    public String updateStatementEntry(@ModelAttribute("accountStatement") AccountStatement accountStatement){
+        statementService.save(accountStatement);
+        return "redirect:/fin/exp/entries";
     }
 
     @PostMapping("/exp/upload")

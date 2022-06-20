@@ -9,4 +9,7 @@ import java.util.List;
 public interface NlpEntriesRepo extends JpaRepository<NlpEntry,Integer> {
     @Query("select distinct n.entryCategory from NlpEntry n ")
     public List<String> findUniqueEntries();
+
+    @Query("select distinct n.discretionaryInd from NlpEntry n where n.entryCategory = ?1")
+    public List<String> findDiscretionary(String category);
 }

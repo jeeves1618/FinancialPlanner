@@ -120,25 +120,38 @@
       </div>
     </div>
     <div id="wrapper">
-      <div th:if="${not #lists.isEmpty(accountEntries)}">
-        <table border="1;" align="center" class="table table-bordered">
+      <div th:if="${not #lists.isEmpty(accountEntries)}" class="container">
+        <table border="1;" align="center" class="table table-bordered center">
           <tr>
             <th>S.No</th>
             <th>Category</th>
-            <th>Annual Amount</th>
-            <th>Monthly Amount</th>
+            <th>Annual Spending</th>
+            <th>Monthly Spending</th>
             <th>Percentage</th>
+            <th>Discretionary</th>
           </tr>
           <tr
             th:each="entry, lstat : ${accountEntries}"
-            th:style="${entry.entryCategory == '  Totals'}? 'font-weight: bold;'"
+            th:style="${entry.entryCategory.contains('Total')}? 'font-weight: bold;'"
           >
             <td align="left" th:text="${entry.serialNumber}"></td>
-            <td align="left" th:text="${entry.entryCategory}"></td>
-            <td align="right" th:text="${entry.annualAmountFmtd}"></td>
-
-            <td align="right" th:text="${entry.monthlyAmountFmtd}"></td>
+            <td align="left">
+              <a
+                th:href="@{/fin/exp/catentries(catID=${entry.entryCategory})}"
+                th:text="${entry.entryCategory}"
+                style="text-decoration: none"
+              ></a>
+            </td>
+            <td
+              align="right"
+              th:text="${entry.annualWithdrawalAmountFmtd}"
+            ></td>
+            <td
+              align="right"
+              th:text="${entry.monthlyWithdrawalAmountFmtd}"
+            ></td>
             <td align="right" th:text="${entry.percentOfTotalFmtd}"></td>
+            <td align="right" th:text="${entry.discretionaryIndicator}"></td>
           </tr>
         </table>
       </div>

@@ -182,6 +182,21 @@ public class StatementService {
         return accountStatementRepo.findAll();
     }
 
+    public AccountStatement getById(Integer theId){
+        return accountStatementRepo.getById(theId);
+    }
+
+    public List<AccountStatement> findEntriesByCategory(String catId){
+        return accountStatementRepo.findEntriesByCategory(catId);
+    }
+
+    public void save(AccountStatement accountStatement){
+        accountStatement.setWithdrawalAmountFmtd(rf.formattedRupee(ft.format(accountStatement.getWithdrawalAmount())));
+        accountStatement.setDepositAmountFmtd(rf.formattedRupee(ft.format(accountStatement.getDepositAmount())));
+        accountStatement.setBalanceAmountFmtd(rf.formattedRupee(ft.format(accountStatement.getBalanceAmount())));
+        accountStatementRepo.save(accountStatement);
+    }
+
     public List<AccountStatement> getCreditEntries(String fileWithPathname, UIMetaData uiMetaData) {
         int bsIterator = 0;
         double balanceAmount = 0.00;

@@ -22,6 +22,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,28 +49,81 @@ public class ExpAnalysisService {
     DecimalFormat ft = new DecimalFormat("Rs ##,##,##0.00");
     DecimalFormat df = new DecimalFormat("##.##%");
     ArrayList<AccountStatement> AccountStatementList = new ArrayList<AccountStatement>();
-    List<NlpCategory> NlpCategorizedList = new ArrayList<>();
+
     String accountNumber = null;
 
     public List<NlpCategory> getUniqueEntries() {
         int sNo = 1;
+        List<NlpCategory> NlpCategorizedWithdrawalList = new ArrayList<>();
+        List<NlpCategory> NlpCategorizedDepositList = new ArrayList<>();
+        List<String> nonTranCategories = Arrays.asList("Bookentries");
+        double totalWithdrawals = accountStatementRepo.findWithdrawalTotals(nonTranCategories), totalDeposits = accountStatementRepo.findDepositTotals(nonTranCategories);
         List<String> nlpCategories = nlpEntriesRepo.findUniqueEntries();
         for (String category: nlpCategories)
         {
             nlpCategory.setSerialNumber(sNo);
             nlpCategory.setEntryCategory(category);
-            nlpCategory.setAnnualAmount(accountStatementRepo.findWithdrawalSumByCategory(category));
-            nlpCategory.setMonthlyAmount(nlpCategory.getAnnualAmount()/12);
-            nlpCategory.setMonthlyAmountFmtd(rf.formattedRupee(ft.format(nlpCategory.getMonthlyAmount())));
-            nlpCategory.setAnnualAmountFmtd(rf.formattedRupee(ft.format(nlpCategory.getAnnualAmount())));
-            nlpCategory.setPercentOfTotal(0.00);
+            nlpCategory.setAnnualWithdrawalAmount(accountStatementRepo.findWithdrawalSumByCategory(category));
+            nlpCategory.setMonthlyWithdrawalAmount(nlpCategory.getAnnualWithdrawalAmount()/12);
+            nlpCategory.setMonthlyWithdrawalAmountFmtd(rf.formattedRupee(ft.format(nlpCategory.getMonthlyWithdrawalAmount())));
+            nlpCategory.setAnnualWithdrawalAmountFmtd(rf.formattedRupee(ft.format(nlpCategory.getAnnualWithdrawalAmount())));
+            nlpCategory.setAnnualDepositAmount(accountStatementRepo.findDepositSumByCategory(category));
+            nlpCategory.setMonthlyDepositAmount(nlpCategory.getAnnualDepositAmount()/12);
+            nlpCategory.setMonthlyDepositAmountFmtd(rf.formattedRupee(ft.format(nlpCategory.getMonthlyDepositAmount())));
+            nlpCategory.setAnnualDepositAmountFmtd(rf.formattedRupee(ft.format(nlpCategory.getAnnualDepositAmount())));
+            List<String> discretionaryInd = nlpEntriesRepo.findDiscretionary(category);
+            nlpCategory.setDiscretionaryIndicator(discretionaryInd.get(0));
+            if (nlpCategory.getAnnualWithdrawalAmount() > nlpCategory.getAnnualDepositAmount())
+                nlpCategory.setPercentOfTotal((nlpCategory.getAnnualWithdrawalAmount()/totalWithdrawals));
+            else
+                nlpCategory.setPercentOfTotal((nlpCategory.getAnnualDepositAmount()/totalDeposits));
             nlpCategory.setPercentOfTotalFmtd(df.format(nlpCategory.getPercentOfTotal()));
-            NlpCategorizedList.add(nlpCategory);
-            nlpCategory = new NlpCategory();
-            sNo = sNo + 1;
 
+            if (nlpCategory.getEntryCategory().equals("Bookentries"))
+            {
+                log.info("Ignoring Bookentries for calculation");
+            }
+            else
+            {
+                if (nlpCategory.getAnnualWithdrawalAmount() > 0) {
+                    NlpCategorizedWithdrawalList.add(nlpCategory);
+                    nlpCategory = new NlpCategory();
+                    sNo = sNo + 1;
+                }
+            }
         }
-        return NlpCategorizedList;
+        nlpCategory = new NlpCategory();
+        nlpCategory.setSerialNumber(sNo);
+        nlpCategory.setEntryCategory("Total Discretionary Spending");
+        nlpCategory.setAnnualWithdrawalAmountFmtd(rf.formattedRupee(ft.format(accountStatementRepo.findWithdrawalSumByDisc("Y",nonTranCategories))));
+        nlpCategory.setMonthlyWithdrawalAmountFmtd(rf.formattedRupee(ft.format(accountStatementRepo.findWithdrawalSumByDisc("Y",nonTranCategories)/12)));
+        nlpCategory.setPercentOfTotal((accountStatementRepo.findWithdrawalSumByDisc("Y",nonTranCategories)/totalWithdrawals));
+        nlpCategory.setPercentOfTotalFmtd(df.format(nlpCategory.getPercentOfTotal()));
+        nlpCategory.setDiscretionaryIndicator("Y");
+        NlpCategorizedWithdrawalList.add(nlpCategory);
+        sNo = sNo + 1;
+
+        nlpCategory = new NlpCategory();
+        nlpCategory.setSerialNumber(sNo);
+        nlpCategory.setEntryCategory("Total Non Discretionary Spending");
+        nlpCategory.setAnnualWithdrawalAmountFmtd(rf.formattedRupee(ft.format(accountStatementRepo.findWithdrawalSumByDisc("N",nonTranCategories))));
+        nlpCategory.setMonthlyWithdrawalAmountFmtd(rf.formattedRupee(ft.format(accountStatementRepo.findWithdrawalSumByDisc("N",nonTranCategories)/12)));
+        nlpCategory.setPercentOfTotal((accountStatementRepo.findWithdrawalSumByDisc("N",nonTranCategories)/totalWithdrawals));
+        nlpCategory.setPercentOfTotalFmtd(df.format(nlpCategory.getPercentOfTotal()));
+        nlpCategory.setDiscretionaryIndicator("N");
+        NlpCategorizedWithdrawalList.add(nlpCategory);
+        sNo = sNo + 1;
+
+        nlpCategory = new NlpCategory();
+        nlpCategory.setSerialNumber(sNo);
+        nlpCategory.setEntryCategory("Total Spending");
+        nlpCategory.setAnnualWithdrawalAmountFmtd(rf.formattedRupee(ft.format(totalWithdrawals)));
+        nlpCategory.setMonthlyWithdrawalAmountFmtd(rf.formattedRupee(ft.format(totalWithdrawals/12)));
+        nlpCategory.setPercentOfTotal((totalWithdrawals/totalWithdrawals));
+        nlpCategory.setPercentOfTotalFmtd(df.format(nlpCategory.getPercentOfTotal()));
+        NlpCategorizedWithdrawalList.add(nlpCategory);
+
+        return NlpCategorizedWithdrawalList;
     }
 
     public List<AccountStatement> getAccountEntries(String fileWithPathname) {
