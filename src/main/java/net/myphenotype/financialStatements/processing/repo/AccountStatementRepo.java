@@ -4,7 +4,6 @@ import net.myphenotype.financialStatements.processing.entity.AccountStatement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface AccountStatementRepo extends JpaRepository<AccountStatement, Integer> {
@@ -12,8 +11,14 @@ public interface AccountStatementRepo extends JpaRepository<AccountStatement, In
     @Query("select a from AccountStatement a where a.entryCategory = ?1 ")
     public List<AccountStatement> findEntriesByCategory(String Category);
 
-    @Query("select a.entryCategory, sum(a.withdrawalAmount) as totalWithdrawals from AccountStatement a where a.entryCategory = ?1 group by a.entryCategory")
-    public HashMap<String,Double> findSumByCategory(String Category);
+    @Query("select a from AccountStatement a where a.entryCategory = ?1 and a.accountNumber in ?2")
+    public List<AccountStatement> findSavingsEntries(String Category, List<String> accountNumbers);
+
+    @Query("select a from AccountStatement a where a.entryCategory is null order by a.withdrawalAmount desc")
+    public List<AccountStatement> findUnknownEntries();
+
+    @Query("select COALESCE(sum(a.withdrawalAmount  - a.depositAmount),0) as totalWithdrawals from AccountStatement a where a.entryCategory = ?1 and a.accountNumber in ?2")
+    public double findSavingsSumByCategory(String Category, List<String> accountNumbers);
 
     @Query("select COALESCE(sum(a.withdrawalAmount),0) as totalWithdrawals from AccountStatement a where a.entryCategory = ?1 ")
     public double findWithdrawalSumByCategory(String Category);
@@ -29,4 +34,7 @@ public interface AccountStatementRepo extends JpaRepository<AccountStatement, In
 
     @Query("select COALESCE(sum(a.withdrawalAmount),0) as totalWithdrawals from AccountStatement a where a.discretionarySpendingIndicator = ?1 and a.entryCategory not in ?2 ")
     public double findWithdrawalSumByDisc(String discretionaryInd, List<String> nonTranCategories);
+
+    @Query("select COALESCE(sum(a.withdrawalAmount),0) as totalWithdrawals from AccountStatement a where a.entryCategory is null ")
+    public double findWithdrawalSumByUnknown();
 }

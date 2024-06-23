@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -21,12 +23,14 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 @Service
 @Data
 @Slf4j
+@PropertySource("classpath:accounts.properties")
 public class StatementService {
 
     @Autowired
@@ -38,6 +42,12 @@ public class StatementService {
     @Autowired
     NlpEntriesRepo nlpEntriesRepo;
 
+    @Value("${one.income.account}")
+    private String oneIncomeAccount;
+
+    @Value("${two.income.account}")
+    private String twoIncomeAccount;
+
     DecimalFormat ft = new DecimalFormat("Rs ##,##,##0.00");
     RupeeFormatter rf = new RupeeFormatter();
     ArrayList<AccountStatement> AccountStatementList = new ArrayList<AccountStatement>();
@@ -46,7 +56,13 @@ public class StatementService {
     public List<AccountStatement> getEntries(String fileWithPathname, UIMetaData uiMetaData) {
         switch (uiMetaData.getTypeOfStatement()) {
             case "B":
-            case "Bank_Statement":
+            case "Indian_Bank_Statement":
+                return getAccountEntries(fileWithPathname);
+            case "I":
+            case "ICICI_Bank_Statement":
+                return getAccountEntries(fileWithPathname);
+            case "H":
+            case "HDFC_Bank_Statement":
                 return getAccountEntries(fileWithPathname);
             case "C":
             case "Credit_Card_Statement":
@@ -148,19 +164,21 @@ public class StatementService {
                                     //System.out.print(accountStatement.itemDescription + "t");
                                     break;
                                 default:
-                                    throw new IllegalStateException("Unexpected STRING Cell Value in the Spreadsheet :" + bsIterator + " and " + cell.getColumnIndex());
+                                    log.info("Unexpected STRING Cell Value in the Spreadsheet :" + bsIterator + " and " + cell.getColumnIndex() + "Getting the cell type as : " + cell.getCellType());
                             }
                             break;
                         case BLANK:
                             //System.out.print(cell.getStringCellValue() + "t");
                             break;
                         default:
-                            throw new IllegalStateException("Unexpected Cell Value in the Spreadsheet :" + bsIterator + " and " + cell.getColumnIndex());
+                            throw new IllegalStateException("Unexpected Cell Value in the Spreadsheet :" + bsIterator + " and " + cell.getColumnIndex() + "Getting the cell type as : " + cell.getCellType());
                     }
                 }
                 accountStatement.setAccountNumber(accountNumber);
                 if (accountStatement.getTransactionRemarks().contains("Default Comments"))
                     log.info("Non transactional rows are skipped");
+                else if (accountNumber.equals(null) || accountStatement.getTransactionDate().equals(null))
+                    log.info("Null/incorrect rows skipped");
                 else
                     AccountStatementList.add(accountStatement);
                 accountStatement = new AccountStatement();
@@ -170,7 +188,8 @@ public class StatementService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        log.info("Account Statement List");
+        System.out.println(AccountStatementList);
         return getEnrichedList(AccountStatementList);
     }
 
@@ -187,7 +206,13 @@ public class StatementService {
     }
 
     public List<AccountStatement> findEntriesByCategory(String catId){
-        return accountStatementRepo.findEntriesByCategory(catId);
+        List<String> accountNumbers = Arrays.asList(twoIncomeAccount,oneIncomeAccount);
+        if (catId.equals("Unknown Entries"))
+            return accountStatementRepo.findUnknownEntries();
+        else if (catId.equals("Savings"))
+            return accountStatementRepo.findSavingsEntries(catId, accountNumbers);
+        else
+            return accountStatementRepo.findEntriesByCategory(catId);
     }
 
     public void save(AccountStatement accountStatement){

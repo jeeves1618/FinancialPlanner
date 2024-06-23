@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @Data
@@ -29,10 +30,11 @@ public class AccountStatement {
     private int numofInstanceElements;
     private String discretionarySpendingIndicator;
     private String accountNumber;
+    private Date dateOfEntry;
 
     public AccountStatement(){
         this.valueDate = "23/09/1980";
-        this.transactionDate = "23/09/1980";
+        this.transactionDate = null;
         this.checkNumber = "00000";
         this.transactionRemarks = "Default Comments";
         this.withdrawalAmount = 0;
@@ -40,5 +42,6 @@ public class AccountStatement {
         this.balanceAmount = 0;
         this.discretionarySpendingIndicator = "N";
         this.accountNumber = "Unknown";
+        this.dateOfEntry = null;
     }
 }

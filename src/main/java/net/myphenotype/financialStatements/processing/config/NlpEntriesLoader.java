@@ -87,6 +87,7 @@ public class NlpEntriesLoader implements ApplicationListener<ApplicationReadyEve
         nlpEntryList.add(new NlpEntry("CMS/ SBIDIV","Dividend Income","N",null));
         nlpEntryList.add(new NlpEntry("DIVIDEND","Dividend Income","N",null));
         nlpEntryList.add(new NlpEntry("ACH/","Dividend Income","N",null));
+        nlpEntryList.add(new NlpEntry("CMS/","Dividend Income","N",null));
         nlpEntryList.add(new NlpEntry("SHOPPING","Shopping and Eatout","N",null));
         nlpEntryList.add(new NlpEntry("SWIGGY","Shopping and Eatout","N",null));
         nlpEntryList.add(new NlpEntry("BUNDL TECH","Shopping and Eatout","N",null));
@@ -129,7 +130,7 @@ public class NlpEntriesLoader implements ApplicationListener<ApplicationReadyEve
         nlpEntryList.add(new NlpEntry("SRI POOJA","Groceries","N",null));
         nlpEntryList.add(new NlpEntry("FFSPL MUMBAI IN","Shopping and Eatout","N",null));
         nlpEntryList.add(new NlpEntry("DBOOKS","Discretionary Learning","Y",null));
-        nlpEntryList.add(new NlpEntry("BVM KIDS","Education","N",null));
+        nlpEntryList.add(new NlpEntry("HUS INTERN","Education","N",null));
         nlpEntryList.add(new NlpEntry("LAPTOP","Education","N",null));
         nlpEntryList.add(new NlpEntry("BOOKS","Education","N",null));
         nlpEntryList.add(new NlpEntry("KSG TECHNOLOGIES","Education","N",null));
@@ -168,6 +169,10 @@ public class NlpEntriesLoader implements ApplicationListener<ApplicationReadyEve
         nlpEntryList.add(new NlpEntry("MyFirst/Nithya K","Family","N",null));
         nlpEntryList.add(new NlpEntry("AMAZON","Miscellaneous","N",null));
         nlpEntryList.add(new NlpEntry("MYGATE","Apartment Maintenance","N",null));
+        nlpEntryList.add(new NlpEntry("KUN CAPIT","Luxury","Y",null));
+        nlpEntryList.add(new NlpEntry("Aadit au","Luxury","Y",null));
+        nlpEntryList.add(new NlpEntry("FASTAG","Toll","N",null));
+        nlpEntryList.add(new NlpEntry("THE PRESIDENT MUTTUKADU","Property Tax","N",null));
 
         nlpEntriesRepo.saveAll(nlpEntryList);
 

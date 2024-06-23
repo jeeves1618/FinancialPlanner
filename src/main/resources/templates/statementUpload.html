@@ -129,8 +129,16 @@
               <td class="painted">
                 <select th:field="*{typeOfStatement}" class="drop-down">
                   <option
+                    th:value="'I'"
+                    th:text="ICICI_Bank_Statement       "
+                  ></option>
+                  <option
+                    th:value="'H'"
+                    th:text="HDFC_Bank_Statement       "
+                  ></option>
+                  <option
                     th:value="'B'"
-                    th:text="Bank_Statement       "
+                    th:text="Indian_Bank_Statement       "
                   ></option>
                   <option
                     th:value="'C'"

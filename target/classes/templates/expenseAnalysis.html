@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <title>Account Statement</title>
+    <title>Expense Analysis</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -97,8 +97,8 @@
     </nav>
     <div id="wrapper">
       <div id="header">
-        <h2 align="center">Expense Analysis</h2>
-        <h4 align="center">
+        <h2 align="center" th:text="${messagetext}">Expense Analysis</h2>
+        <h4 align="center" th:text="${subtext}">
           <i>Entries considered for a period of one year</i>
         </h4>
       </div>
@@ -107,6 +107,7 @@
     <div id="wrapper">
       <div id="header">
         <form
+          class="sideBySideForm"
           align="center"
           method="get"
           th:object="${UIMetaData}"
@@ -117,21 +118,65 @@
             All Transactions
           </button>
         </form>
+        <form
+          class="sideBySideForm"
+          align="center"
+          method="get"
+          th:object="${UIMetaData}"
+          th:action="@{/fin/exp/list}"
+          enctype="multipart/form-data"
+        >
+          <button type="submit" class="add-button" align="center">
+            Expense Analysis
+          </button>
+        </form>
+
+        <form
+          class="sideBySideForm"
+          align="center"
+          method="get"
+          th:object="${UIMetaData}"
+          th:action="@{/fin/inc/list}"
+          enctype="multipart/form-data"
+        >
+          <button type="submit" class="add-button" align="center">
+            Income Analysis
+          </button>
+        </form>
+
+        <form
+          class="sideBySideForm"
+          align="center"
+          method="get"
+          th:object="${UIMetaData}"
+          th:action="@{/fin/sav/list}"
+          enctype="multipart/form-data"
+        >
+          <button type="submit" class="add-button" align="center">
+            Saving Avenues
+          </button>
+        </form>
       </div>
     </div>
     <div id="wrapper">
-      <div th:if="${not #lists.isEmpty(accountEntries)}" class="container">
+      <div th:if="${not #lists.isEmpty(expenseEntries)}" class="container">
         <table border="1;" align="center" class="table table-bordered center">
+          <col width="50" />
+          <col width="500" />
+          <col width="300" />
+          <col width="300" />
+          <col width="150" />
+          <col width="50" />
           <tr>
             <th>S.No</th>
             <th>Category</th>
-            <th>Annual Spending</th>
-            <th>Monthly Spending</th>
+            <th>Annual</th>
+            <th>Monthly</th>
             <th>Percentage</th>
             <th>Discretionary</th>
           </tr>
           <tr
-            th:each="entry, lstat : ${accountEntries}"
+            th:each="entry, lstat : ${expenseEntries}"
             th:style="${entry.entryCategory.contains('Total')}? 'font-weight: bold;'"
           >
             <td align="left" th:text="${entry.serialNumber}"></td>
@@ -144,11 +189,11 @@
             </td>
             <td
               align="right"
-              th:text="${entry.annualWithdrawalAmountFmtd}"
+              th:text="${entry.annualWithdrawalAmountFmtd.equals('Rs.0.00')}? ${entry.annualDepositAmountFmtd} : ${entry.annualWithdrawalAmountFmtd}"
             ></td>
             <td
               align="right"
-              th:text="${entry.monthlyWithdrawalAmountFmtd}"
+              th:text="${entry.monthlyWithdrawalAmountFmtd.equals('Rs.0.00')}? ${entry.monthlyDepositAmountFmtd} : ${entry.monthlyWithdrawalAmountFmtd}"
             ></td>
             <td align="right" th:text="${entry.percentOfTotalFmtd}"></td>
             <td align="right" th:text="${entry.discretionaryIndicator}"></td>
@@ -156,5 +201,6 @@
         </table>
       </div>
     </div>
+    <br />
   </body>
 </html>

@@ -9,6 +9,7 @@ import net.myphenotype.financialStatements.processing.entity.UploadInfo;
 import net.myphenotype.financialStatements.processing.repo.ChartOfAccountsRepo;
 import net.myphenotype.financialStatements.processing.repo.JournalsRepo;
 import net.myphenotype.financialStatements.processing.service.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -286,7 +287,7 @@ public class MainController {
     }
 
     @GetMapping(path = "/txn/ledger")
-    public String getLedger(Model model){
+    public String getLedger(@NotNull Model model){
         List<Ledger> ledgerList = ledgerService.getLedgerEntries();
         model.addAttribute("ledgers",ledgerList);
         return "accountLedger";
@@ -332,9 +333,40 @@ public class MainController {
 
     @GetMapping(path = "/exp/list")
     public String getStatementList(Model model){
-        List<NlpCategory> accountEntries = expAnalysisService.getUniqueEntries();
-        model.addAttribute("accountEntries", accountEntries);
-        model.addAttribute("messagetext", "Please select the type of statement and upload it here");
+        List<NlpCategory> accountEntries = expAnalysisService.getUniqueEntries("Expenses");
+        TimeLineData timeLineData = expAnalysisService.getTimeLine();
+        String subText = "Entries considered for a period from " + timeLineData.getTransactionDateLow() + " to " + timeLineData.getTransactionDateHigh();
+        model.addAttribute("expenseEntries", accountEntries);
+        /*log.info("Deposits" + accountEntries);
+        List<NlpCategory> incomeEntries = expAnalysisService.getUniqueEntries("Income");*/
+        model.addAttribute("incomeEntries", null);
+        model.addAttribute("messagetext", "Expense Analysis");
+        model.addAttribute("subtext", subText);
+        model.addAttribute("UIMetaData",uiMetaData);
+        log.info("No of months: " + timeLineData.getMonthsBetween());
+        return "expenseAnalysis";
+    }
+
+    @GetMapping(path = "/inc/list")
+    public String getIncomeList(Model model){
+        List<NlpCategory> incomeEntries = expAnalysisService.getUniqueEntries("Income");
+        TimeLineData timeLineData = expAnalysisService.getTimeLine();
+        String subText = "Entries considered for a period from " + timeLineData.getTransactionDateLow() + " to " + timeLineData.getTransactionDateHigh();
+        model.addAttribute("expenseEntries", incomeEntries);
+        model.addAttribute("messagetext", "Income Analysis");
+        model.addAttribute("subtext", subText);
+        model.addAttribute("UIMetaData",uiMetaData);
+        return "expenseAnalysis";
+    }
+
+    @GetMapping(path = "/sav/list")
+    public String getSavingList(Model model){
+        List<NlpCategory> savingEntries = expAnalysisService.getSavingsEntry("Savings");
+        TimeLineData timeLineData = expAnalysisService.getTimeLine();
+        String subText = "Entries considered for a period from " + timeLineData.getTransactionDateLow() + " to " + timeLineData.getTransactionDateHigh();
+        model.addAttribute("expenseEntries", savingEntries);
+        model.addAttribute("messagetext", "Savings Analysis");
+        model.addAttribute("subtext", subText);
         model.addAttribute("UIMetaData",uiMetaData);
         return "expenseAnalysis";
     }
@@ -370,9 +402,11 @@ public class MainController {
     }
 
     @PostMapping(path = "/exp/updateEntry")
-    public String updateStatementEntry(@ModelAttribute("accountStatement") AccountStatement accountStatement){
+    public String updateStatementEntry(@ModelAttribute("accountStatement") AccountStatement accountStatement, RedirectAttributes redirectAttributes){
         statementService.save(accountStatement);
-        return "redirect:/fin/exp/entries";
+        String entryCategory = accountStatement.getEntryCategory();
+        redirectAttributes.addAttribute("catID",entryCategory);
+        return "redirect:/fin/exp/catentries";
     }
 
     @PostMapping("/exp/upload")

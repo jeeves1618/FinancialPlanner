@@ -33,9 +33,17 @@ public class UploadService {
         uploadInfo.setUploadTime(tmf.format(today));
         uploadInfo.setUploadStatus("Uploaded");
         switch (uploadInfo.getFileType()){
+            case "I":
+            case "ICICI_Bank_Statement":
+                uploadInfo.setFileType("ICICI Bank Statement");
+                break;
+            case "H":
+            case "HDFC_Bank_Statement":
+                uploadInfo.setFileType("HDFC Bank Statement");
+                break;
             case "B":
-            case "Bank_Statement":
-                uploadInfo.setFileType("Bank Statement");
+            case "Indian_Bank_Statement":
+                uploadInfo.setFileType("Indian Bank Statement");
                 break;
             case "C":
             case "Credit_Card_Statement":
